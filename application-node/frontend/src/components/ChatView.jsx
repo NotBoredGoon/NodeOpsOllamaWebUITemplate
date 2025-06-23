@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Send } from 'lucide-react';
-import { availableModels } from '../constants';
 import ChatMessage from './ChatMessage';
 
-const ChatView = ({ currentChat, onSendMessage, selectedModel, setSelectedModel }) => {
+const ChatView = ({ currentChat, onSendMessage, selectedModel, setSelectedModel, availableModels }) => {
     const [input, setInput] = useState('');
     const chatEndRef = useRef(null);
 
@@ -32,10 +31,15 @@ const ChatView = ({ currentChat, onSendMessage, selectedModel, setSelectedModel 
                     value={selectedModel}
                     onChange={(e) => setSelectedModel(e.target.value)}
                     className="model-select"
+                    disabled={!availableModels || availableModels.length === 0}
                 >
-                    {availableModels.map(model => (
-                        <option key={model.id} value={model.id}>{model.name}</option>
-                    ))}
+                    {availableModels && availableModels.length > 0 ? (
+                        availableModels.map(model => (
+                            <option key={model.id} value={model.id}>{model.name}</option>
+                        ))
+                    ) : (
+                        <option value="">No models available</option>
+                    )}
                 </select>
             </div>
 

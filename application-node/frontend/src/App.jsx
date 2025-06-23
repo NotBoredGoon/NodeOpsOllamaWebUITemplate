@@ -218,6 +218,8 @@ export default function App() {
                     onSendMessage={handleSendMessage}
                     selectedModel={selectedModel}
                     setSelectedModel={setSelectedModel}
+                    availableModels={availableModels}
+                    modelsError={modelsError}
                 />
             ) : (
                 <div className="no-chat-selected">

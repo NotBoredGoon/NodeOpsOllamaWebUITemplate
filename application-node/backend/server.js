@@ -72,7 +72,7 @@ app.post('/api/chat', async (req, res) => {
             messages: [{ role: 'user', content: prompt }],
             stream: false,
         };
-        const ollamaResponse = await fetch(llmEndpoint + '/api/chat', {
+        const ollamaResponse = await fetch(llmEndpoint + 'api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(ollamaPayload),
