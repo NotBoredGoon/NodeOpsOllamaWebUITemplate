@@ -22,16 +22,6 @@ const llmEndpoint = config.llm.endpoint_url;
 app.use(cors()); // Allow requests from our React frontend
 app.use(express.json()); // Parse JSON bodies
 
-// --- GEMINI API Configuration (for simulation) ---
-// IMPORTANT: You should use an environment variable for your API key in a real app.
-// Create a .env file in this directory with: GEMINI_API_KEY=your_key_here
-// and run with `node -r dotenv/config server.js` after `npm install dotenv`
-require('dotenv').config();
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`;
-
-// --- API Endpoints ---
-
 // Endpoint to provide Firebase config to the frontend
 app.get('/api/config/firebase', (req, res) => {
     if (config.firebase) {
@@ -41,10 +31,33 @@ app.get('/api/config/firebase', (req, res) => {
     }
 });
 
+// Fetches the list of available models from the configured Ollama instance.
+app.get('/api/models', async (req, res) => {
+    try {
+        const response = await fetch(`${llmEndpoint}/api/tags`);
+        if (!response.ok) {
+            throw new Error(`Ollama server responded with status: ${response.status}`);
+        }
+        const data = await response.json();
+        
+        const availableModels = data.models.map(model => ({
+            id: model.name,
+            name: model.name.split(':')[0] 
+        }));
+        
+        res.json(availableModels);
+
+    } catch (error) {
+        console.error('Error fetching models from Ollama:', error.message);
+        res.status(500).json({ error: 'Could not fetch model list from the Ollama node. Please check the configuration.' });
+    }
+});
+
+
 app.post('/api/chat', async (req, res) => {
     try {
         const { model, prompt } = req.body;
-        
+
         if (!model || !prompt) {
             return res.status(400).json({ error: 'Model and prompt are required.' });
         }
@@ -84,4 +97,5 @@ app.post('/api/chat', async (req, res) => {
 
 app.listen(port, () => {
     console.log(`Backend server listening at http://localhost:${port}`);
+    console.log(`Configured to connect to Ollama at: ${llmEndpoint}`);
 }); 

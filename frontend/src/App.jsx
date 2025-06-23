@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { MessageSquare } from 'lucide-react';
 import { initializeFirebase, auth } from './firebase';
-import { availableModels } from './constants';
 import AuthModal from './components/AuthModal';
 import Sidebar from './components/Sidebar';
 import ChatView from './components/ChatView';
@@ -12,8 +11,42 @@ export default function App() {
     const [isFirebaseReady, setIsFirebaseReady] = useState(false);
     const [chats, setChats] = useState([]);
     const [activeChatId, setActiveChatId] = useState(null);
-    const [selectedModel, setSelectedModel] = useState(availableModels[0].id);
     const [theme, setTheme] = useState('dark');
+    const [availableModels, setAvailableModels] = useState([]);
+    const [selectedModel, setSelectedModel] = useState('');
+    const [modelsError, setModelsError] = useState('');
+
+    // Fetch available models when the component mounts
+    useEffect(() => {
+        const fetchModels = async () => {
+            try {
+                // Assumes your backend is at localhost:8080 during development
+                const response = await fetch('http://localhost:8080/api/models');
+                if (!response.ok) {
+                    const err = await response.json();
+                    throw new Error(err.error || 'Failed to fetch models.');
+                }
+                const models = await response.json();
+
+                if (models.length > 0) {
+                    setAvailableModels(models);
+                    setSelectedModel(models[0].id); // Select the first model by default
+                    setModelsError('');
+                } else {
+                    setModelsError('No models found on the Ollama server.');
+                }
+            } catch (error) {
+                console.error("Error fetching models:", error.message);
+                setModelsError(error.message);
+                setAvailableModels([]);
+            }
+        };
+
+        if (user) { // Only fetch models if user is logged in
+            fetchModels();
+        }
+    }, [user]); // Re-fetch if the user logs in
+
 
     useEffect(() => {
         const init = async () => {
