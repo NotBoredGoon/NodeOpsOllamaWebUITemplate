@@ -1,0 +1,21 @@
+# The deployer should copy this to 'config.yaml' and fill in their values.
+
+# Backend Server Configuration
+backend:
+  port: 8080
+
+# LLM Inference Configuration
+llm:
+  # The FULL URL of the running Ollama API chat endpoint.
+  # The deployer must replace this with the IP/domain of their own Ollama node.
+  endpoint_url: "http://127.0.0.1:11434/api/chat"
+
+# Firebase Configuration (for user authentication on the frontend)
+# The deployer must get these from their own Firebase project console.
+firebase:
+  apiKey: "YOUR_FIREBASE_API_KEY"
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com"
+  projectId: "YOUR_PROJECT_ID"
+  storageBucket: "YOUR_PROJECT_ID.appspot.com"
+  messagingSenderId: "YOUR_SENDER_ID"
+  appId: "YOUR_APP_ID"
