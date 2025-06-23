@@ -7,7 +7,7 @@ const fetch = require('node-fetch');
 
 let config;
 try {
-    const configFile = fs.readFileSync(path.join(__dirname, 'config.yaml'), 'utf8');
+    const configFile = fs.readFileSync(path.join(__dirname, '..', 'config.yaml'), 'utf8');
     config = yaml.load(configFile);
 } catch (e) {
     console.error("FATAL: Could not load config.yaml. Please ensure it exists and is valid by copying config.example.yaml.", e);
@@ -65,14 +65,14 @@ app.post('/api/chat', async (req, res) => {
             return res.status(500).json({ error: 'LLM endpoint is not configured in config.yaml.' });
         }
 
-        console.log(`Forwarding request for model [${model}] to: ${llmEndpoint}`);
+        console.log(`Forwarding request for model [${model}] to: ${llmEndpoint}/api/chat`);
 
         const ollamaPayload = {
             model: model,
             messages: [{ role: 'user', content: prompt }],
             stream: false,
         };
-        const ollamaResponse = await fetch(llmEndpoint, {
+        const ollamaResponse = await fetch(llmEndpoint + '/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(ollamaPayload),
