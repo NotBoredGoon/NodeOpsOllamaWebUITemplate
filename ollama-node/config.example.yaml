@@ -1,0 +1,4 @@
+models_to_pull:
+  - llama3:8b
+  - mistral:7b
+  - codegemma
