@@ -9,7 +9,7 @@ RUN apt-get update && \
 RUN curl -fsSL https://ollama.com/install.sh | sh
 
 # Copy your config and startup script
-COPY config.yaml /app/config.yaml
+# COPY config.yaml /app/config.yaml
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
