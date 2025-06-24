@@ -27,7 +27,7 @@ services:
     env:
       - name: models # Environment variable name
         value: "{{.Ollama}}" # Placeholder for dynamic value substitution; It means whenever someone try to deploy this service, they need to provide a value for this variable.
-        default: llama3:8b, mistral:7b, codegemma # Default value for the environment variable
+        default: llama3:8b,mistral:7b,codegemma # Default value for the environment variable
 
     # Specifies the minimum resource allocation
     # This also specify the template price

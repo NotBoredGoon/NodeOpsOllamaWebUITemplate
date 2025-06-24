@@ -1,22 +1,25 @@
-const fs = require('fs');
-const yaml = require('js-yaml');
-const path = require('path');
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const fetch = require('node-fetch');
 
-let config;
-try {
-    const configFile = fs.readFileSync(path.join(__dirname, '..', 'config.yaml'), 'utf8');
-    config = yaml.load(configFile);
-} catch (e) {
-    console.error("FATAL: Could not load config.yaml. Please ensure it exists and is valid by copying config.example.yaml.", e);
-    process.exit(1); // Exit if config is missing
+
+const config = {
+    endpoint_url: process.env.ENDPOINT_URL,
+    firebase: {
+        apiKey: process.env.API_KEY,
+        authDomain: process.env.AUTH_DOMAIN,
+        projectId: process.env.PROJECT_ID,
+        storageBucket: process.env.STORAGE_BUCKET,
+        messagingSenderId: process.env.MESSAGING_SENDER_ID,
+        appId: process.env.APP_ID,
+    }
 }
 
+
 const app = express();
-const port = config.backend.port || 8080;
-const llmEndpoint = config.llm.endpoint_url;
+const port = 8080;
+const llmEndpoint = config.endpoint_url;
 
 // Middleware
 app.use(cors()); // Allow requests from our React frontend
@@ -62,7 +65,7 @@ app.post('/api/chat', async (req, res) => {
             return res.status(400).json({ error: 'Model and prompt are required.' });
         }
         if (!llmEndpoint) {
-            return res.status(500).json({ error: 'LLM endpoint is not configured in config.yaml.' });
+            return res.status(500).json({ error: 'LLM endpoint is not configured.' });
         }
 
         console.log(`Forwarding request for model [${model}] to: ${llmEndpoint}/api/chat`);

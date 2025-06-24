@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    networks:
+      - app-network
+
+  backend:
+    build: ./backend
+    # The port mapping should match the one in config.yaml
+    ports:
+      - "8080:8080" 
+    volumes:
+      # Mount the config file into the container
+      - ./config.yaml:/app/config.yaml
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

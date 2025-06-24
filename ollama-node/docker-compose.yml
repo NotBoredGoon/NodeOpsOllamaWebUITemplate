@@ -1,0 +1,26 @@
+# version: '3.8'
+
+# services:
+#   ollama:
+#     build: .
+#     ports:
+#       - "11434:11434"
+#     # The deployer configures the models by setting this environment variable.
+#     environment:
+#       # You can change this string to pull different models.
+#       - MODELS=llama3:8b,mistral:7b,codegemma
+#     volumes:
+#       # This persists the downloaded models on the host machine, so they
+#       # aren't re-downloaded every time the container restarts.
+#       - ollama_data:/root/.ollama
+#     # For GPU acceleration (highly recommended for performance)
+#     # deploy:
+#     #   resources:
+#     #     reservations:
+#     #       devices:
+#     #         - driver: nvidia
+#     #           count: all
+#     #           capabilities: [gpu]
+
+# volumes:
+#   ollama_data:

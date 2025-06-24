@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 
+
 let app;
 let auth;
 
@@ -20,6 +21,15 @@ export const initializeFirebase = async () => {
         if (!firebaseConfig.apiKey) {
             throw new Error("Firebase config fetched from server is invalid.");
         }
+
+        // const firebaseConfig = {
+        //     apiKey: process.env.API_KEY,
+        //     authDomain: process.env.AUTH_DOMAIN,
+        //     projectId: process.env.PROJECT_ID,
+        //     storageBucket: process.env.STORAGE_BUCKET,
+        //     messagingSenderId: process.env.MESSAGING_SENDER_ID,
+        //     appId: process.env.APP_ID,
+        // }
 
         app = initializeApp(firebaseConfig);
         auth = getAuth(app);
